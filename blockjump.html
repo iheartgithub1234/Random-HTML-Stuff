@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Sam VS Spikes</title>
+        <style>
+            *{
+                padding: 0;
+                margin: 0;
+            }
+            .ultimate-div {
+                position: relative;
+                top: 130px;
+            }
+            .play-text {
+                text-align: center;
+                color: darkblue;
+                position: relative;
+                top: 50px;
+            }
+            .style-button {
+                position: relative;
+                top: 75px;
+                cursor: pointer;
+                border: 2px solid black;
+            }
+            .center-button {
+                text-align: center;
+            }
+            .style-button:hover {
+                position: relative;
+                top: 75px;
+                cursor: pointer;
+                border: 2px solid black;
+                background: lightgreen;
+            }
+            body {
+                background-color: lightyellow;
+            }
+            #game{
+                width: 500px;
+                height: 204px;
+                border: 1px solid black;
+                margin: auto;
+                position: relative;
+                top: 130px;
+                background: lightgreen;
+            }
+            #character{
+                width: 20px;
+                height: 50px;
+                position: relative;
+                top: 150px;
+            }
+            .animate{
+                animation: jump 500ms;
+            }
+            @keyframes jump{
+                0%{top: 150px;}
+                35%{top: 100px;}
+                65%{top: 100px;}
+                100%{top: 150px;}
+            }
+            #block{
+                width: 20px;
+                height: 20px;
+                position: relative;
+                top: 150px;
+                left: 480px;
+                animation: block 1.5s infinite linear;
+            }
+            @keyframes block{
+                0%{left:480px;}
+                100%{left:0px;}
+            }
+            .time-text {
+                text-align: center;
+                color: darkblue;
+                position: relative;
+                top: 160px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="ultimate-div">
+            <h2 class="play-text"><u>Play Jump The Spikes!</u></h2>
+            <h3 class="play-text">Click the Button to Start.</h3>
+            <h3 class="play-text">Then Click Inside the Box to Jump.</h3>
+            <div class="center-button">
+                <button class="style-button" onclick="buttonPressed()">Click Here To Play!</button>
+            </div>
+            <div id="game" onclick="jump()">
+                <img id="character" src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2d/Yosemite_Sam.svg/800px-Yosemite_Sam.svg.png" alt="Samuel">
+                <img id="block" src="https://static.wikia.nocookie.net/sonic/images/d/d3/Spikes_in_Sonic_the_Hedgehog_4.png/revision/latest?cb=20130304122439" alt="Spikes">
+            </div>
+            <h3 class="time-text" id="timeseconds"></h3>
+        </div>
+           <audio id="jumpSound">
+                <source src="file:///home/chronos/u-edd7635881fe279e9f31df7b36d97c477d9e8f26/MyFiles/Downloads/Other/toy-button-105724.mp3" type="audio/mpeg">
+            </audio>
+            <audio id="deathSound">
+                <source src="file:///home/chronos/u-edd7635881fe279e9f31df7b36d97c477d9e8f26/MyFiles/Downloads/Other/videogame-death-sound-43894.mp3" type="audio/mpeg">
+            </audio>
+        <script>
+            var character = document.getElementById("character");
+            var block = document.getElementById("block");
+            var startTime = new Date().getTime();
+            var timePassed = 0;
+            var jumpSound = document.getElementById("jumpSound");
+            var deathSound = document.getElementById("deathSound");
+			var isStarted = false;
+            
+            function updateTimePassed() {
+                if (isStarted) {
+                    var currentDate = new Date().getTime();
+                    timePassed = Math.floor((currentDate - startTime) / 1000);
+                    document.getElementById("timeseconds").innerHTML = timePassed;
+                }
+            }
+            
+            function jump() {
+                if (character.classList != "animate") {
+                character.classList.add("animate");
+                jumpSound.play();
+            }
+            
+            setTimeout(function() {
+                character.classList.remove("animate");
+            }, 500);
+            }
+            
+            function buttonPressed() {
+                if (!isStarted) {
+                    startTime = new Date().getTime();
+                    isStarted = true;
+                    setInterval(updateTimePassed, 1000);
+                }
+                var checkDead = setInterval(function() {
+                var characterTop = parseInt(window.getComputedStyle(character).getPropertyValue("top"));
+                var blockLeft = parseInt(window.getComputedStyle(block).getPropertyValue("left"));
+                if (blockLeft < 20 && blockLeft > 0 && characterTop >= 150) {
+                    block.style.animation = "none";
+                    block.style.display = "none";
+                    clearInterval(checkDead);
+                    deathSound.play();
+                    setTimeout(function() {
+                        alert("YOU LOSE");
+                        alert("YOU SURVIVED FOR " + (timePassed - 3) + " SECONDS");
+                        timePassed = 0;
+                        location.reload();
+                    }, 3000);
+                }
+            }, 1);
+            setInterval(updateTimePassed, 1000);
+            }
+        </script>
+    </body>
+</html>

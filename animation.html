@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" href="https://cdn.icon-icons.com/icons2/1448/PNG/512/42682rainbow_99056.png">
+        <title>Animation</title>
+        <style>
+            h1,p,label,button {
+                font-family: Roboto;
+            }
+            
+            #shape {
+                height: 50px;
+                width: 50px;
+                background-color: black;
+                position: relative;
+            }
+            
+            #box {
+                text-align: center;
+                height: 50px;
+                width: 500px;
+                border: 1px;
+                border-color: black;
+                border-style: solid;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Animation</h1>
+        <div id="box">
+            <div id="shape"></div>
+        </div>
+        <hr>
+        <p>Shape</p>
+        <button onclick="square()">Square</button>
+        <button onclick="circle()">Circle</button>
+        <hr>
+        <p>Speed</p>
+        <input id="speedInput">
+        <hr>
+        <p>Color Changing</p>
+        <input type="radio" name="shapeColor" id="on">
+        <label for="on">On</label>
+        <br>
+        <input type="radio" name="shapeColor" id="off">
+        <label for="off">Off</label>
+        <br>
+        <button id="applyColors">Apply</button>
+        <hr>
+        <p>Background Color</p>
+        <input type="color" id="colorPicker">
+        <hr>
+        <button onclick="reset()">Reset</button>
+        <script>
+            let shape = document.getElementById("shape");
+            let position = 0;
+            let movement;
+            let movementTwo;
+            let colors = ["red", "orange", "yellow", "green", "blue", "purple", "brown", "grey"];
+            let speedInput = document.getElementById("speedInput");
+            let speed = 1;
+            
+            forwards();
+            
+            function forwards() {
+                movement = setInterval(function() {
+                    position += speed;
+                    shape.style.left = position + "px";
+                    if(position >= 450) {
+                        shape.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                        clearInterval(movement);
+                        backwards();
+                    }
+                },10);
+            }
+            
+            function backwards() {
+                movementTwo = setInterval(function() {
+                    position -= speed;
+                    shape.style.left = position + "px";
+                    if(position <= 0) {
+                        shape.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                        clearInterval(movementTwo);
+                        forwards();
+                    }
+                },10)
+            }
+            
+            function square() {
+                shape.style.borderRadius = "0%";
+            }
+            
+            function circle() {
+                shape.style.borderRadius = "50%";
+            }
+            
+            speedInput.addEventListener("keydown", function(event) {
+                if(event.key === "Enter") {
+                    speed = Number(speedInput.value);
+                }
+            });
+            
+            document.getElementById("applyColors").onclick = function() {
+                if(document.getElementById("on").checked === true) {
+                    colors = ["red", "orange", "yellow", "green", "blue", "purple", "brown", "grey"];
+                    shape.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                }
+                
+                if(document.getElementById("off").checked === true) {
+                    shape.style.backgroundColor = "black";
+                    colors = ["black"];
+                    box.style.backgroundColor = "white";
+                }
+            }
+            
+            document.getElementById("colorPicker").oninput = function() {
+                box.style.backgroundColor = colorPicker.value;
+            }
+            
+            function reset() {
+                location.reload();
+            }
+        </script>
+    </body>
+</html>

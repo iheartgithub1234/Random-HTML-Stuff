@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Custom Alert</title>
+        <style>
+            #my-div {
+                width: 600px;
+                height: 200px;
+                background-color: rgb(245, 245, 245);
+                border: 5px;
+                border-radius: 20px;
+                border-style: solid;
+                box-shadow: 5px 5px 3px grey;
+                margin: auto;
+                position: relative;
+                bottom: 210px;
+            }
+
+            #custom-text {
+                font-size: 40px;
+                font-family: calibri;
+                text-align: center;
+            }
+
+            #ok-button {
+                width: 80px;
+                height: 50px;
+                font-size: 40px;
+                font-family: calibri;
+                border: 3px;
+                border-radius: 5px;
+                border-style: solid;
+                position: relative;
+                left: 260px;
+                top: 30px;
+                cursor: pointer;
+                background-color: rgb(160, 228, 253);
+            }
+
+            #ok-button:hover {
+                background-color: rgb(199, 241, 255)
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="my-div">
+            <h1 id="custom-text"></h1>
+            <button id="ok-button">OK</button>
+        </div>
+
+        <script>
+            let myDiv = document.getElementById("my-div");
+            let timer = 210;
+
+            function popup(text) {
+                document.getElementById("custom-text").textContent = text;
+
+                let move = setInterval(function() {
+                    timer -= 8;
+                    myDiv.style.bottom = timer + "px";
+
+                    if(timer <= 0) {
+                        clearInterval(move);
+                    }
+                }, 1);
+            }
+
+            document.getElementById("ok-button").onclick = function() {
+                myDiv.style.display = "none";
+            }
+
+            popup("Hello, World!");
+        </script>
+    </body>
+</html>

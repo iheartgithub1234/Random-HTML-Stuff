@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+     <head>
+          <meta charset="UTF-8">
+          <title>Bouncy Ball</title>
+          <style>
+              body {
+                   margin: 0;
+                   overflow: hidden;
+              }
+              
+              canvas {
+                   border: 1px solid black;
+              }
+          </style>
+     </head>
+     <body>
+          <canvas></canvas>
+
+          <script>
+              const canvas = document.querySelector("canvas");
+              const context = canvas.getContext("2d");
+              
+              canvas.width = innerWidth;
+              canvas.height = innerHeight;
+              
+              const gravity = 1;
+              const friction = 0.95;
+              const colors = ["red", "orange", "yellow", "green", "blue", "purple"];
+              
+              let balls = [];
+              let amount = 12;
+              
+              class Ball {
+                   constructor(yPos, xPos, yVelocity, xVelocity, radius, color) {
+                        this.yPos = yPos;
+                        this.xPos = xPos;
+                        this.yVelocity = yVelocity;
+                        this.xVelocity = xVelocity;
+                        this.radius = radius;
+                        this.color = color;
+                   }
+              
+                   draw() {
+                        context.beginPath()
+                        context.arc(this.xPos, this.yPos, this.radius, 0, Math.PI * 2, false);
+                        context.fillStyle = this.color;
+                        context.fill();
+                        context.closePath();
+              
+                        this.update();
+                        this.checkCollision();
+                   }
+              
+                   update() {
+                        this.xPos += this.xVelocity;
+                        this.yPos += this.yVelocity;
+                   }
+              
+                   checkCollision() {
+                        if(this.yPos + this.radius > canvas.height) {
+                             this.yVelocity = -this.yVelocity * friction;
+                             this.xVelocity *= friction;
+                        } else {
+                             this.yVelocity += gravity;
+                        }
+              
+                        if(this.xPos + this.radius > canvas.width) {
+                             this.xVelocity = -this.xVelocity * friction;
+                             this.xPos = canvas.width - this.radius;
+                        }
+              
+                        if(this.xPos - this.radius < 0) {
+                             this.xVelocity = -this.xVelocity * friction;
+                             this.xPos = this.radius;
+                        }
+                   }
+              }
+              
+              function animate() {
+                   context.clearRect(0, 0, canvas.width, canvas.height);
+              
+                   balls.forEach(ball => {
+                        ball.draw();
+                   });
+              
+                   requestAnimationFrame(animate);
+              }
+              
+              for(let i = 0; i < amount; i++) {
+                   balls.push(new Ball(100, 100, i, i, (i*5) + 10, colors[i % colors.length]));
+              }
+              
+              animate();
+          </script>
+     </body>
+</html>
